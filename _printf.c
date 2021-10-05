@@ -5,10 +5,14 @@
 
 /**
  * _printf- prints any arguement
+ * convert: converts integer number into octal, hex, etc.
  * @format: is a character pointer
  *
  * Return: returns an integer
  */
+
+void _printf(char *,...);
+char* convert(unsigned int, int);
 
 int _printf(const char *format, ...)
 {
@@ -46,6 +50,26 @@ charCount += _strlen(printedString);
 break;
 }
 
+case 'd':
+printedchar = va_arg(arg,int);
+if(printedchar<0)
+{
+printedchar = -printedchar;
+_putchar('-');
+}
+puts(convert(Printedchar,10));
+break;
+
+case 'i':
+printedchar = va_arg(arg,int);
+if(printedchar<0)
+{
+printedchar=-printedchar;
+_putchar('-');
+}
+puts(printedchar);
+break;
+
 case '%':
 _putchar('%');
 format++;
@@ -71,6 +95,24 @@ charCount++;
 }
 va_end(arglist);
 
-return charCount;
+return(charCount);
 }
+
+char *convert(unsigned int num, int base)
+{
+static char Representation[]= "0123456789ABCDEF";
+static char buffer[50];
+char *ptr;
+
+*ptr = '\0';
+
+do
+{
+*--ptr = Representation[num%base];
+num /= base;
+}while(num != 0);
+
+return(ptr);
+
+
 
