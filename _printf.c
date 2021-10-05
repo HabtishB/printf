@@ -19,12 +19,12 @@ char *printedString;
 
 va_start(arglist, format);
 
-while(*format)
+while (*format)
 {
 if (*format == '%')
 {
 format++;
-switch(*format)
+switch (*format)
 {
 case 'c':
 printedChar = va_arg(arglist, int);
@@ -45,7 +45,6 @@ format++;
 charCount += _strlen(printedString);
 break;
 }
-
 case '%':
 _putchar('%');
 format++;
@@ -71,6 +70,6 @@ charCount++;
 }
 va_end(arglist);
 
-return charCount;
+return (charCount);
 }
 
