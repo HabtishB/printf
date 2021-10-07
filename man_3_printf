@@ -1,0 +1,55 @@
+.Dd 10/07/2021
+.Dt _printf
+.Os Linux
+.Sh NAME
+.Nm _printf.
+.Nd modified printf function. Take a formar and arguments to standard output
+.Sh SYNOPSIS
+.Pp
+Fl #define "main.h"
+.Pp
+Fl int _printf (const char *format, ...);
+.Sh DESCRIPTION
+_printf is a smaller copy of printf. The function performs an output according
+to a format (described below). The function generates an output to stdout.
+Like printf, _printf works with a variable number of arguments.
+.Pp
+1) Ordinary characters (except %), which are copied without any change to the
+standard output.
+.Pp
+
+For example _printf ("Hello World") will print "Hello World" - without the
+double quotes.
+.Pp
+
+2) Conversion specifications, which are those that modify the outputs that are
+copied without changes in the output sequence.
+.Pp
+
+On the other hand, the arguments are received by _printf thanks to a variable
+function (va_arg) and must correspond to the specified conversion specifier.
+.Pp
+
+For example _printf ("% d", 5) will print "5" - without the double quotes.
+.Pp
+
+.Fl Conversion specifiers
+
+The % character is followed by zero or only one of the following indicators:
+d, i The output is a signed integer.
+.Pp
+
+c Convert the argument to an unsigned character and generate an output with the
+resulting character.
+.Pp
+
+s The argument is const char * a pointer to an array of character types
+(pointer to a string). The output does not include a null termination byte
+('\ 0').
+.Pp
+
+b Convert the argument to a binary number
+.Pp
+
+% Create an % as a output. There isnn't argument converted. So, the complete
+conversion specification is '%%'.

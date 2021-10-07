@@ -1,118 +1,107 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
 #include "main.h"
-
 /**
- * _printf- prints any arguement
- * convert: converts integer number into octal, hex, etc.
- * @format: is a character pointer
- *
- * Return: returns an integer
+ * _printf - prints anything (output) according to a format
+ * @format: character string (d, i)
+ * Return: numbers of characters printed.
  */
-
-void _printf(char *,...);
-char* convert(unsigned int, int);
 
 int _printf(const char *format, ...)
 {
-va_list arglist;
-int charCount = 0;
-int printedChar;
-char *printedString;
+	va_list list;
+	int i = 0, index = 0, count = 0, (*gof)(va_list list);
 
-va_start(arglist, format);
+	va_start(list, format);
 
-while(*format)
-{
-if (*format == '%')
-{
-format++;
-switch(*format)
-{
-case 'c':
-printedChar = va_arg(arglist, int);
-_putchar(printedChar);
-format++;
-charCount++;
-break;
+	if ((format == NULL) || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
 
-case 's':
-{
-printedString = va_arg(arglist, char *);
-while (*printedString)
-{
-_putchar(*printedString);
-printedString++;
-}
-format++;
-charCount += _strlen(printedString);
-break;
-}
-
-case 'd':
-printedchar = va_arg(arg,int);
-if(printedchar<0)
-{
-printedchar = -printedchar;
-_putchar('-');
-}
-puts(convert(Printedchar,10));
-break;
-
-case 'i':
-printedchar = va_arg(arg,int);
-if(printedchar<0)
-{
-printedchar=-printedchar;
-_putchar('-');
-}
-puts(printedchar);
-break;
-
-case '%':
-_putchar('%');
-format++;
-charCount++;
-break;
-
-case '\0':
-break;
-
-default:
-_putchar('%');
-_putchar(*format);
-format++;
-charCount += 2;
-}
-}
- else
-{
-_putchar(*format);
-format++;
-charCount++;
-}
-}
-va_end(arglist);
-
-return(charCount);
+	for (i = 0; format[i] != '\0'; i++)
+	{
+		index = i + 1;
+		if (format[i] != '%')
+		{
+			_putchar(format[i]);
+			count++;
+		}
+		else if (format[i] == '%' && format[index] == '%')
+		{
+			_putchar('%');
+			i = index;
+			count++;
+		}
+		else
+		{
+			gof = get_op_func(&format[index]);
+			if (gof != NULL)
+			{
+				count += gof(list);
+				i = index;
+			}
+			else
+			{
+				_putchar(format[i]);
+				count++;
+			}
+		}
+	}
+	va_end(list);
+	return (count);
 }
 
-char *convert(unsigned int num, int base)
+/**
+ * op_integer - Function that prints integer or decimal
+ *
+ * @list: Variable type va_list
+ *
+ *Return: 0
+ *
+ */
+int op_integer(va_list list)
 {
-static char Representation[]= "0123456789ABCDEF";
-static char buffer[50];
-char *ptr;
+	int number = va_arg(list, int);
+	unsigned int positive = 0;
+	int count = 0;
 
-*ptr = '\0';
+	if (number < 0)
+	{
+		_putchar('-');
+		count++;
+		positive = number * (-1);
+	}
+	else
+	{
+		positive = number;
+	}
 
-do
+	count += fnc_put_number_recursion(positive);
+
+	return (count);
+}
+
+/**
+ * fnc_put_number_recursion - Function that prints the numbers with recursion
+ * @number: Variable unsigned int type
+ * Return: Count to the numbers prints
+ */
+int fnc_put_number_recursion(unsigned int number)
 {
-*--ptr = Representation[num%base];
-num /= base;
-}while(num != 0);
+	unsigned int r_mod, r_div;
+	int count = 0;
 
-return(ptr);
+	r_mod = number % 10;
+	r_div = number / 10;
 
+	if (r_div != 0)
+	{
+		count += (fnc_put_number_recursion(r_div));
+		count++;
+		_putchar(r_mod + '0');
+	}
+	else
+	{
+		_putchar(number + '0');
+		count++;
+	}
 
-
+	return (count);
+}
